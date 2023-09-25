@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /*
@@ -61,22 +62,22 @@ public class RentalController {
     public  void findRentalCard(){}
      @GetMapping("/RentalCard/{id}")
      public ResponseEntity<RentalCardOutputDTO> getRentalCard(@PathVariable String id) {
-         RentalCardOutputDTO rentalCardOutputDTO = inquiryUsecase.getRentalCard(new UserInputDTO(id,""));
-         return ResponseEntity.ok(rentalCardOutputDTO);
+         Optional<RentalCardOutputDTO> rentalCardOutputDTO = inquiryUsecase.getRentalCard(new UserInputDTO(id,""));
+         return ResponseEntity.ok(rentalCardOutputDTO.get());
      }
 
     @ApiOperation(value = "대여도서목록 조회",notes = "사용자정보(id) -> 대여도서목록 조회")
     @GetMapping("/RentalCard/{id}/rentbook")
     public ResponseEntity<List<RentItemOutputDTO>> getAllRentItem(@PathVariable String id) {
-        List<RentItemOutputDTO> rentalCardOutputDTOs = inquiryUsecase.getAllRentItem(new UserInputDTO(id,""));
-        return ResponseEntity.ok(rentalCardOutputDTOs);
+        Optional<List<RentItemOutputDTO>> rentalCardOutputDTOs = inquiryUsecase.getAllRentItem(new UserInputDTO(id,""));
+        return ResponseEntity.ok(rentalCardOutputDTOs.get());
     }
 
     @ApiOperation(value = "반납도서목록 조회",notes = "사용자정보(id) -> 반납도서목록 조회")
     @GetMapping("/RentalCard/{id}/returnbook")
     public ResponseEntity<List<RetrunItemOupputDTO>> getAllReturnItem(@PathVariable String id) {
-        List<RetrunItemOupputDTO> allReturnItem = inquiryUsecase.getAllReturnItem(new UserInputDTO(id, ""));
-        return ResponseEntity.ok(allReturnItem);
+        Optional<List<RetrunItemOupputDTO>> allReturnItem = inquiryUsecase.getAllReturnItem(new UserInputDTO(id, ""));
+        return ResponseEntity.ok(allReturnItem.get());
     }
 
     @ApiOperation(value = "대여기능",notes = "사용자정보,아이템정보1 -> 도서카드정보 ")

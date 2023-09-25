@@ -8,5 +8,5 @@ import java.awt.*;
 public class ClearOverdueInfoDTO {
     public String UserId;
     public String UserNm;
-    public Integer point;
+    public long point;
 }

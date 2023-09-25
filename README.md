@@ -28,6 +28,11 @@
     ```
     mvn clean package 
     ```
+  - 어플리케이션 빌드(TEST 제외)
+
+    ```
+    mvn clean package  -DskipTests
+    ```
   - 실행
     ```
       ./mvnw spring-boot:run

@@ -23,15 +23,15 @@ spring:
       path: /h2-console
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092
-#      bootstrap-servers: 192.168.0.31:9092
+#      bootstrap-servers: localhost:9092
+      bootstrap-servers: kafka-msa:29092
       group-id: rental
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
-      bootstrap-servers: localhost:9092
-#      bootstrap-servers: 192.168.0.31:9092
+#      bootstrap-servers: localhost:9092
+      bootstrap-servers: kafka-msa:29092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 server:
@@ -40,3 +40,20 @@ server:
 logging:
   level:
     org.hibernate.SQL: debug
+
+producers:
+  topic1:
+    name: rental_rent
+  topic2:
+    name: rental_return
+  topic3:
+    name: overdue_clear
+  topic4:
+    name: point_use
+
+consumer:
+  topic1:
+    name: rental_result
+  groupid:
+    name: rental
+

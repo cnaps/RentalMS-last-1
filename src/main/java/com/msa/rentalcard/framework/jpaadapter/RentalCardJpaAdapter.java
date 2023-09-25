@@ -5,14 +5,16 @@ import com.msa.rentalcard.domain.model.RentalCard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class RentalCardJpaAdapter implements RentalCardOuputPort {
 
     private final RentalCardRepository rentalCardRepository;
     @Override
-    public RentalCard loadRentalCard(String userId) {
-        return rentalCardRepository.findByMemberId(userId).get();
+    public Optional<RentalCard> loadRentalCard(String userId) {
+        return Optional.of(rentalCardRepository.findByMemberId(userId).get());
     }
 
     @Override

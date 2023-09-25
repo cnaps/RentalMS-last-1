@@ -6,10 +6,11 @@ import com.msa.rentalcard.framework.web.dto.RetrunItemOupputDTO;
 import com.msa.rentalcard.framework.web.dto.UserInputDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface InquiryUsecase {
-    public RentalCardOutputDTO getRentalCard(UserInputDTO userInputDTO);
-    public List<RentItemOutputDTO> getAllRentItem(UserInputDTO userInputDTO);
-    public List<RetrunItemOupputDTO> getAllReturnItem(UserInputDTO userInputDTO);
+    public Optional<RentalCardOutputDTO> getRentalCard(UserInputDTO userInputDTO);
+    public Optional<List<RentItemOutputDTO>> getAllRentItem(UserInputDTO userInputDTO);
+    public Optional<List<RetrunItemOupputDTO>> getAllReturnItem(UserInputDTO userInputDTO);
 
 }

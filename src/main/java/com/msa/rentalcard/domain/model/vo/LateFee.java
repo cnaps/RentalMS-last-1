@@ -12,12 +12,12 @@ import javax.persistence.Embeddable;
 @Embeddable
 @Getter
 public class LateFee {
-    private Integer point;
-    public LateFee addPoint(Integer point){
+    private long point;
+    public LateFee addPoint(long point){
         return new LateFee(this.point + point);
     }
 
-    public LateFee removePoint(Integer point) throws Exception {
+    public LateFee removePoint(long point) throws Exception {
         if(point > this.point){
             throw new Exception("보유한 포이트보다 커서 삭제할수 없습니다.");
         }

@@ -2,7 +2,6 @@ package com.msa.rentalcard.application.inputport;
 
 import com.msa.rentalcard.application.outputport.RentalCardOuputPort;
 import com.msa.rentalcard.application.usecase.InquiryUsecase;
-import com.msa.rentalcard.domain.model.RentalCard;
 import com.msa.rentalcard.framework.web.dto.RentItemOutputDTO;
 import com.msa.rentalcard.framework.web.dto.RentalCardOutputDTO;
 import com.msa.rentalcard.framework.web.dto.RetrunItemOupputDTO;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -20,23 +20,29 @@ import java.util.stream.Collectors;
 public class InquiryInputPort implements InquiryUsecase {
 
     private final RentalCardOuputPort rentalCardOuputPort;
+
     @Override
-    public RentalCardOutputDTO getRentalCard(UserInputDTO userInputDTO) {
-
-        RentalCard loadedRentalCard = rentalCardOuputPort.loadRentalCard(userInputDTO.UserId);
-
-        return RentalCardOutputDTO.mapToDTO(loadedRentalCard);
+    public Optional<RentalCardOutputDTO> getRentalCard(UserInputDTO userInputDTO) {
+        return rentalCardOuputPort.loadRentalCard(userInputDTO.UserId)
+                .map(loadCard -> RentalCardOutputDTO.mapToDTO(loadCard));
     }
 
     @Override
-    public List<RentItemOutputDTO> getAllRentItem(UserInputDTO userInputDTO) {
-        RentalCard loadedRentalCard = rentalCardOuputPort.loadRentalCard(userInputDTO.UserId);
-        return loadedRentalCard.getRentItemList().stream().map(RentItemOutputDTO::mapToDTO).collect(Collectors.toList());
+    public Optional<List<RentItemOutputDTO>> getAllRentItem(UserInputDTO userInputDTO) {
+        return rentalCardOuputPort.loadRentalCard(userInputDTO.UserId)
+                .map(loadCard -> loadCard.getRentItemList()
+                        .stream()
+                        .map(RentItemOutputDTO::mapToDTO)
+                        .collect(Collectors.toList()));
     }
 
     @Override
-    public List<RetrunItemOupputDTO> getAllReturnItem(UserInputDTO userInputDTO) {
-        RentalCard loadedRentalCard = rentalCardOuputPort.loadRentalCard(userInputDTO.UserId);
-        return loadedRentalCard.getReturnItemList().stream().map(RetrunItemOupputDTO::mapToDTO).collect(Collectors.toList());
+    public Optional<List<RetrunItemOupputDTO>> getAllReturnItem(UserInputDTO userInputDTO) {
+        return rentalCardOuputPort.loadRentalCard(userInputDTO.UserId)
+                .map(loadCard -> loadCard.getReturnItemList()
+                        .stream()
+                        .map(RetrunItemOupputDTO::mapToDTO)
+                        .collect(Collectors.toList()));
+
     }
 }

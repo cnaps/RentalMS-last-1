@@ -1,5 +1,7 @@
 package com.msa.rentalcard.domain.model;
 
+import com.msa.rentalcard.domain.model.event.ItemRented;
+import com.msa.rentalcard.domain.model.event.ItemReturned;
 import com.msa.rentalcard.domain.model.vo.*;
 import lombok.*;
 
@@ -39,9 +41,23 @@ public class RentalCard {
         return rentalCard; 
     }
 
+    public static ItemRented createItemRentedEvent(IDName idName,Item item,long point){
+        return new ItemRented(idName,item,point);
+    }
+
+    public static ItemReturned createItemReturnEvent(IDName idName,Item item,long point){
+        return new ItemReturned(idName,item,point);
+    }
+
     public RentalCard rentItem(Item item) throws Exception {
         checkRentalAvailable();
         this.addRentalItem(RentItem.createRentItem(item));
+        return this;
+    }
+
+    public RentalCard cancleRentItem(Item item) throws Exception {
+        RentItem rentedItem = this.rentItemList.stream().filter(i -> i.getItem().equals(item)).findFirst().get();
+        this.removeRentalItem(rentedItem);
         return this;
     }
 
@@ -50,6 +66,13 @@ public class RentalCard {
         calculateLateFee(rentedItem,returnDate);
         this.addReturnItem(ReturnItem.creatReturnItem(rentedItem));
         this.removeRentalItem(rentedItem);
+        return this;
+    }
+
+    public RentalCard cancleReturnItem(Item item,long point) throws Exception {
+        ReturnItem returnItem = this.returnItemList.stream().filter(i -> i.getItem().equals(item)).findFirst().get();
+        this.totalLateFee.removePoint(point);
+        this.removeReturnItem(returnItem);
         return this;
     }
 
@@ -62,6 +85,7 @@ public class RentalCard {
         this.rentStatus = RentStatus.RENT_UNAVAILABLE;
         return this;
     }
+
 
     private void checkRentalAvailable() throws Exception {
         if (this.rentStatus == RentStatus.RENT_UNAVAILABLE) throw new IllegalStateException("대출 불가 상태입니다.");
@@ -91,7 +115,7 @@ public class RentalCard {
         return this;
     }
 
-    public Integer makeAvailableRental(Integer point) throws Exception {
+    public long makeAvailableRental(long point) throws Exception {
         if (this.rentItemList.size() != 0) throw new IllegalArgumentException("모든 도서가 반납되어야 정지를 해제 할 수 있습니다.");
         if (this.getTotalLateFee().getPoint() != point) throw  new IllegalArgumentException("해당 포인트로 연체를 해제할 수 없습니다.");
         this.setTotalLateFee(totalLateFee.removePoint(point));
@@ -99,6 +123,12 @@ public class RentalCard {
         {
             this.rentStatus = RentStatus.RENT_AVAILABLE;
         }
+        return this.getTotalLateFee().getPoint();
+    }
+
+    public long cancleMakeAvailableRental(long point) throws Exception {
+        this.setTotalLateFee(totalLateFee.addPoint(point));
+        this.rentStatus = RentStatus.RENT_UNAVAILABLE;
         return this.getTotalLateFee().getPoint();
     }
 
@@ -114,6 +144,11 @@ public class RentalCard {
     private void removeRentalItem(RentItem rentItem)
     {
         this.getRentItemList().remove(rentItem);
+    }
+
+    private void removeReturnItem(ReturnItem returnItem)
+    {
+        this.getReturnItemList().remove(returnItem);
     }
 
     public static RentalCard sample(){

@@ -53,7 +53,7 @@ public class RentalMSApplication {
         showcardStatus(sampleCard);
 
         System.out.println("▶▶▶ 정지해제처리");
-        Integer minusPoint = sampleCard.makeAvailableRental(sampleCard.getTotalLateFee().getPoint());
+        long minusPoint = sampleCard.makeAvailableRental(sampleCard.getTotalLateFee().getPoint());
 
         System.out.println("▶▶▶ 현재 남은 연체료는 " + sampleCard.getTotalLateFee().getPoint());
         System.out.println("▶▶▶ 회원포인트에서 삭감될 포인트는 " + minusPoint);
